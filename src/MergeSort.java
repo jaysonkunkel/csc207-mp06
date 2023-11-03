@@ -39,25 +39,33 @@ public class MergeSort implements Sorter {
 
   /**
    * Sort an array using the merge sort algorithm.
+   * 
+   * Preconditions: Vals does not contain null values.
    */
   @Override
   public <T> void sort(T[] vals, Comparator<? super T> comparator) {
-    sort(vals, comparator, 0, vals.length-1);
+    sort(vals, comparator, 0, vals.length);
   } // sort
 
+  /**
+   * Sort the values in indices [lb..ub) of values using order to compare values.
+   */
   public static <T> void sort(T[] vals, Comparator<? super T> comparator, int lo, int hi){
 
-    if(lo < hi){
+    // if the array is not a singleton
+    if(hi - lo >= 2){
 
+      // calculate the midpoint 
       int mid = (lo + hi)/2;
 
+      // sort both halves of the array
       sort(vals, comparator, lo, mid);
-      sort(vals, comparator, mid+1, hi);
+      sort(vals, comparator, mid, hi);
 
+      // merged both sorted halves of the array
       merge(vals, lo, mid, hi, comparator);
-    }
-
-  } // sort
+    } // if
+  } // sort T[], Comparator<? super T>, int, int)
 
   // +-----------------+---------------------------------------------
   // | Local utilities |
@@ -71,35 +79,50 @@ public class MergeSort implements Sorter {
    */
   static <T> void merge(T[] vals, int lo, int mid, int hi, Comparator<? super T> comparator) {
 
-    T[] merged = java.util.Arrays.copyOfRange(vals, lo, hi+1);
+    // create a copy of vals
+    T[] merged = java.util.Arrays.copyOfRange(vals, lo, hi);
 
-    System.out.println(Arrays.toString(merged));
+    //System.out.println(Arrays.toString(merged));
 
+    // initialize the left and right counters for vals
+    // initialize the current counter for merged
     int left = lo;
-    int right = mid+1;
-    int current = lo;
+    int right = mid;
+    int current = 0;
 
     // Merge the left and right halves
-    while(left <= lo + (mid-lo) && right <= lo + (hi - lo)){
-      if(comparator.compare(merged[left-lo], merged[right-lo]) <= 0){
-        vals[current] = merged[left-lo];
+
+    // while the left and right counters are within their subarrays
+    while(left < mid && right < hi){
+      // compare the first element in each subarray and insert the smallest element
+      if(comparator.compare(vals[left], vals[right]) <= 0){
+        merged[current] = vals[left];
         left++;
-      }
+      } // if
       else{
-        vals[current] = merged[right-lo];
+        merged[current] = vals[right];
         right++;
-      }
+      } // else
       current++;
-    }
+    } // while
 
     // Copy over remaining elements, if any
-    while(left <= lo + (mid-lo)){
-      vals[current++] = merged[left++ - lo];
-    }
 
-    while(right < hi - mid){
-      vals[current++] = merged[right++ - lo];
-    }
-  } // merge
+    // while elements remain in the left subarray, copy them over
+    while(left < mid){
+      merged[current++] = vals[left++];
+    } // while
+
+    // while elements remain in the right subarray, copy them over
+    while(right < hi){
+      merged[current++] = vals[right++];
+    } // while
+
+    // copy elements in temporary array back into original array
+    for (int i = 0; i < current; i++) {
+      vals[lo + i] = merged[i];
+    } // for
+
+  } // merge (T[], int, int, int, Comparator<? super T>)
   
 } // class MergeSort

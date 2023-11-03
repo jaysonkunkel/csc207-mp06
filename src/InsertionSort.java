@@ -41,7 +41,11 @@ public class InsertionSort implements Sorter {
     vals[j] = temp;
   } // swap (T[] int, int)
 
-  
+  /**
+   * Sort an array using the insertion sort algorithm.
+   * 
+   * Preconditions: Vals does not contain null values.
+   */
   @Override
   public <T> void sort(T[] values, Comparator<? super T> comparator) {
     sort(values, comparator, 0, values.length);
