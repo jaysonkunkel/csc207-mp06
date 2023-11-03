@@ -128,4 +128,19 @@ public class SortTester {
     assertArrayEquals(original, expected);
   } // unorderedIntegerTest
 
+  @Test
+  public void largeArrayTest(){
+    int size = 100000000;
+    Integer[] original = new Integer[size];
+    for(int i = 0; i < size; i++){
+      original[i] = size - i - 1;
+    }
+    Integer[] expected = new Integer[size];
+    for(int i = 0; i < size; i++){
+      expected[i] = i;
+    }
+    sorter.sort(original, compareInts);
+    assertArrayEquals(original, expected);
+  } // largeArrayTest
+
 } // class SortTester
